@@ -1,0 +1,12 @@
+# Go build artifacts
+bin/
+*.exe
+*.dll
+*.log
+
+# IDE
+.vscode/
+.DS_Store
+
+# Local app data
+localdata/

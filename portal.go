@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"io"
 	"net"
 	"net/http"
 	"net/url"
@@ -11,6 +12,16 @@ import (
 )
 
 func currentIPv4() string {
+	// Use the address selected by Windows for the portal route. Interface
+	// enumeration can otherwise return a VPN or virtual adapter first.
+	conn, err := net.DialTimeout("udp", "netaccess.iitism.ac.in:6082", 2*time.Second)
+	if err == nil {
+		defer conn.Close()
+		if localAddr, ok := conn.LocalAddr().(*net.UDPAddr); ok && localAddr.IP.To4() != nil {
+			return localAddr.IP.To4().String()
+		}
+	}
+
 	interfaces, err := net.Interfaces()
 	if err != nil {
 		return "127.0.0.1"
@@ -67,8 +78,27 @@ func Login(username, password string) error {
 		return fmt.Errorf("login request failed with status %s", resp.Status)
 	}
 
-	if !CheckInternetConnectivity() {
-		return errors.New("authentication did not restore internet access")
+	body, err := io.ReadAll(io.LimitReader(resp.Body, 16*1024))
+	if err != nil {
+		return fmt.Errorf("failed to read login response: %w", err)
 	}
-	return nil
+	responseText := strings.ToLower(string(body))
+	for _, message := range []string{
+		"invalid username or password",
+		"invalid username",
+		"invalid password",
+		"authentication failed",
+	} {
+		if strings.Contains(responseText, message) {
+			return errors.New("portal rejected the username or password")
+		}
+	}
+
+	for attempt := 0; attempt < 10; attempt++ {
+		if CheckInternetConnectivity() {
+			return nil
+		}
+		time.Sleep(time.Second)
+	}
+	return fmt.Errorf("authentication response was %s, but internet access was not restored", resp.Status)
 }

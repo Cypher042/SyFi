@@ -19,6 +19,7 @@ func IsTargetSSID() (bool, error) {
 
 func CurrentSSID() (string, error) {
 	cmd := exec.Command("netsh", "wlan", "show", "interfaces")
+	hideCommandWindow(cmd)
 	out, err := cmd.Output()
 	if err != nil {
 		return "", err

@@ -11,6 +11,9 @@ import (
 )
 
 func userLocalAppDataDir() string {
+	if programData := os.Getenv("ProgramData"); programData != "" {
+		return filepath.Join(programData, "CollegeWiFiAutoLogin")
+	}
 	if os.Getenv("LOCALAPPDATA") != "" {
 		return filepath.Join(os.Getenv("LOCALAPPDATA"), "CollegeWiFiAutoLogin")
 	}

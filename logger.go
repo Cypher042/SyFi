@@ -2,11 +2,14 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
 )
+
+const maxLogBytes = 32 * 1024
 
 type Logger struct {
 	file *os.File
@@ -40,12 +43,37 @@ func (l *Logger) log(level, msg string) {
 	_ = l.file.Sync()
 }
 
-func (l *Logger) Info(msg string)  { l.log("INFO", msg) }
-func (l *Logger) Warn(msg string)  { l.log("WARN", msg) }
-func (l *Logger) Error(msg string) { l.log("ERROR", msg) }
+func (l *Logger) Info(msg string) { l.log("INFO", msg) }
+func (l *Logger) Warn(msg string) { l.log("WARN", msg) }
 
 func sanitizeForLog(msg string) string {
 	msg = strings.ReplaceAll(msg, "\n", " ")
 	msg = strings.ReplaceAll(msg, "\r", " ")
 	return msg
+}
+
+func ReadRecentLogs() (string, error) {
+	file, err := os.Open(filepath.Join(appLogDirectory(), LogFileName))
+	if err != nil {
+		if os.IsNotExist(err) {
+			return "No service logs yet.", nil
+		}
+		return "", fmt.Errorf("read service logs: %w", err)
+	}
+	defer file.Close()
+
+	data, err := io.ReadAll(io.LimitReader(file, maxLogBytes+1))
+	if err != nil {
+		return "", fmt.Errorf("read service logs: %w", err)
+	}
+	if len(data) > maxLogBytes {
+		data = data[len(data)-maxLogBytes:]
+		if index := strings.IndexByte(string(data), '\n'); index >= 0 {
+			data = data[index+1:]
+		}
+	}
+	if len(data) == 0 {
+		return "No service logs yet.", nil
+	}
+	return string(data), nil
 }

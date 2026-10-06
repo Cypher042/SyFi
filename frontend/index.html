@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SyFi - Captive Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.9 16.1a5 5 0 0 1 6.2 0M12 20h.01"/></svg>
+        </div>
+        <div>
+          <h1>SyFi</h1>
+          <p>// auto captive portal login</p>
+        </div>
+      </div>
+
+      <div class="connection-state">
+        <div class="check-ring"><span>✓</span></div>
+        <h2 id="connection-title">You're online</h2>
+        <p id="connection-subtitle">Portal login handled automatically</p>
+      </div>
+
+      <dl class="network-status">
+        <div>
+          <dt>Network</dt>
+          <dd id="network-name">Checking...</dd>
+        </div>
+        <div>
+          <dt>Target Wi-Fi</dt>
+          <dd id="target-status">• Checking</dd>
+        </div>
+        <div>
+          <dt>Internet</dt>
+          <dd id="internet-status">• Checking</dd>
+        </div>
+        <div>
+          <dt>Captive portal</dt>
+          <dd id="portal-status">• Checking</dd>
+        </div>
+      </dl>
+    </aside>
+
+    <section class="content">
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"/></svg>
+      </button>
+      <header class="content-header">
+        <div>
+          <h2>Sign-in settings</h2>
+          <p>Used whenever SyFi detects the portal on your campus<br>network.</p>
+        </div>
+        <div class="header-actions">
+          <div class="target-pill">Target <strong>ISM-Campus-WiFi</strong></div>
+        </div>
+      </header>
+
+      <section class="credentials-card">
+        <div class="field">
+          <label for="username">Username</label>
+          <input id="username" type="text" autocomplete="username">
+        </div>
+        <div class="field password-field">
+          <label for="password">Password</label>
+          <div class="password-input">
+            <input id="password" type="password" autocomplete="current-password">
+            <button id="toggle-password" type="button" aria-label="Show password">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.06 12.35a1 1 0 0 1 0-.7C3.4 8.3 7.27 5 12 5s8.6 3.3 9.94 6.65a1 1 0 0 1 0 .7C20.6 15.7 16.73 19 12 19s-8.6-3.3-9.94-6.65Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <button id="save" class="save-button" type="button">Save credentials</button>
+        <p id="message" class="message" aria-live="polite"></p>
+      </section>
+
+      <section class="service-card">
+        <div class="service-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><rect width="14" height="10" x="5" y="3" rx="2"/><path d="M12 13v4M8 21h8M9 17h6"/></svg>
+        </div>
+        <div class="service-copy">
+          <p>Windows service</p>
+          <strong id="service-status">Checking...</strong>
+        </div>
+        <button id="service-action" class="service-action" type="button">Install</button>
+      </section>
+
+      <pre id="status" class="visually-hidden" aria-live="polite">Loading...</pre>
+      <pre id="logs" class="visually-hidden" aria-live="polite">Loading logs...</pre>
+      <footer>Made by <span>&lt;/&gt;</span> Cypher042</footer>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

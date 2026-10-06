@@ -6,6 +6,7 @@ const message = document.getElementById("message");
 const serviceStatus = document.getElementById("service-status");
 const serviceAction = document.getElementById("service-action");
 const themeToggle = document.getElementById("theme-toggle");
+const refreshButton = document.getElementById("refresh");
 let statusCheckRunning = false;
 let serviceCheckRunning = false;
 let logCheckRunning = false;
@@ -22,6 +23,22 @@ function setTheme(theme) {
 
 function showMessage(text) {
   message.textContent = text;
+}
+
+function serviceErrorMessage(error) {
+  const detail = String(error);
+  if (detail.toLowerCase().includes("access is denied")) {
+    return "Please run SyFi as administrator.";
+  }
+  return detail;
+}
+
+async function refreshDashboard() {
+  refreshButton.disabled = true;
+  refreshButton.classList.add("is-refreshing");
+  await Promise.all([refreshStatus(), refreshService(), refreshLogs()]);
+  refreshButton.classList.remove("is-refreshing");
+  refreshButton.disabled = false;
 }
 
 function setStatusValue(elementId, value, state) {
@@ -92,7 +109,7 @@ async function refreshService() {
     serviceAction.textContent = service.installed ? "Uninstall" : "Install";
   } catch (error) {
     serviceStatus.textContent = "Unavailable";
-    showMessage(`Service status failed: ${error}`);
+    showMessage(`Service status failed: ${serviceErrorMessage(error)}`);
   } finally {
     serviceCheckRunning = false;
   }
@@ -135,7 +152,7 @@ serviceAction.addEventListener("click", async () => {
       await waitForService();
     }
   } catch (error) {
-    showMessage(`Service action failed: ${error}`);
+    showMessage(`Service action failed: ${serviceErrorMessage(error)}`);
   } finally {
     serviceAction.disabled = false;
   }
@@ -160,10 +177,7 @@ themeToggle.addEventListener("click", () => {
   setTheme(document.documentElement.classList.contains("dark") ? "light" : "dark");
 });
 
+refreshButton.addEventListener("click", refreshDashboard);
+
 setTheme(localStorage.getItem("syfi-theme") || "light");
-loadCredentials().then(refreshStatus);
-refreshService();
-refreshLogs();
-setInterval(refreshStatus, 5000);
-setInterval(refreshService, 2000);
-setInterval(refreshLogs, 2000);
+loadCredentials().then(refreshDashboard);

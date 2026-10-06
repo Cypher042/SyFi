@@ -34,6 +34,10 @@ The executable is created at:
 .\syfi-gui.exe
 ```
 
+The repository includes the SyFi icon as `assets\syfi.ico`. The accompanying
+`syfi.syso` Windows resource file embeds that icon automatically whenever Go
+builds the package, so no additional icon arguments are needed.
+
 The `-H windowsgui` linker option prevents a console window from appearing
 when the GUI starts. The `-w -s` options reduce the executable size.
 
@@ -64,6 +68,9 @@ go build -tags desktop,production `
   -ldflags "-w -s -H windowsgui" `
   -o syfi-gui-arm64.exe .
 ```
+
+The generated executables use the SyFi icon in Windows Explorer, the taskbar,
+and the application window.
 
 Unset the variables after cross-compiling if you will build again in the same
 PowerShell session:

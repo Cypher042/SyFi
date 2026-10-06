@@ -25,6 +25,11 @@
         <p id="connection-subtitle">Portal login handled automatically</p>
       </div>
 
+      <button id="refresh" class="refresh-button" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0-14.7-3L3 11m0 0V5m0 6h6M4 13a8.1 8.1 0 0 0 14.7 3L21 13m0 0v6m0-6h-6"/></svg>
+        <span>Refresh</span>
+      </button>
+
       <dl class="network-status">
         <div>
           <dt>Network</dt>
@@ -46,13 +51,15 @@
     </aside>
 
     <section class="content">
-      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"/></svg>
-      </button>
+      <div class="top-actions">
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"/></svg>
+        </button>
+      </div>
       <header class="content-header">
         <div>
           <h2>Sign-in settings</h2>
-          <p>Used whenever SyFi detects the portal on your campus<br>network.</p>
+          <p>Used whenever SyFi detects the portal on your campus network.</p>
         </div>
         <div class="header-actions">
           <div class="target-pill">Target <strong>ISM-Campus-WiFi</strong></div>
